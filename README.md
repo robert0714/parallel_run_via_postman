@@ -6,6 +6,7 @@ A sample nodeJS application to demonstrate how to run postman collection in para
 
 ## HOW TO RUN nodeJS:
 ```bash
+npm install dotenv --save
 npm install
 node run.js
 ```
