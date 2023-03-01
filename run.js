@@ -10,12 +10,14 @@ console.log(`inputData is ${process.env.INPUT_DATA}`);
 console.log(`collectionJson is ${process.env.COLLECTION_JSON}`);
 console.log(`globalVariable is ${process.env.GLOBAL_VARIABLE}`);
 console.log(`envVariable is ${process.env.ENV_VARIABLE}`);
+console.log(`foders is ${process.env.FOLDERS}`);
 
 const inputData = `${process.env.INPUT_DATA}`;
 const collectionJson = `${process.env.COLLECTION_JSON}`;
 const globalVariable = `${process.env.GLOBAL_VARIABLE}`;
 const envVariable = `${process.env.GLOBAL_VARIABLE}`;
-const foders = ['request' ,'response', 'time' ];
+const foders = `${process.env.FOLDERS}`.split(",");
+// const foders = ['request' ,'response', 'time' ];
 
 
 let parallelCollectionRuns = [];
@@ -63,7 +65,7 @@ function (err, results) {
     err && console.error(err); 
     results.forEach(function (result) {
         console.log("=====================================================================================================================================================");
-        const failures = result.run.failures;
+        var failures = result.run.failures;
         
         console.log("");
         console.info(failures.length ? JSON.stringify(failures.failures, null, 2) :
