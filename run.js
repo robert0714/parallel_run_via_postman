@@ -8,21 +8,24 @@ const newman = require('newman'); // change to require('newman'), if using outsi
 require('dotenv').config()
 console.log(`inputData is ${process.env.INPUT_DATA}`);
 console.log(`collectionJson is ${process.env.COLLECTION_JSON}`);
-console.log(`globalVariable is ${process.env.GLOBAL_VARIABLE}`);
-console.log(`envVariable is ${process.env.ENV_VARIABLE}`);
 console.log(`foders is ${process.env.FOLDERS}`);
+console.log(`UUID is ${process.env.UUID}`);
+console.log(`BASE_URL is ${process.env.BASE_URL}`);
 
-const inputData = `${process.env.INPUT_DATA}`;
+const inputData = `${process.env.INPUT_DATA}`.split(",");
 const collectionJson = `${process.env.COLLECTION_JSON}`;
-const globalVariable = `${process.env.GLOBAL_VARIABLE}`;
-const envVariable = `${process.env.GLOBAL_VARIABLE}`;
-const foders = `${process.env.FOLDERS}`.split(",");
-// const foders = ['request' ,'response', 'time' ];
 
+const uuid =  `${process.env.UUID}`;
+const baseUrl =  `${process.env.BASE_URL}`;
+const foders = `${process.env.FOLDERS}`; 
+
+const globalVariable=[ { "key": "uuid", "value": uuid } ];
+const envVariable=[{ "key":"baseUrl", "value": baseUrl }];
 
 let parallelCollectionRuns = [];
+console.log("inputData start."); 
 
-foders.forEach(element => {
+inputData.forEach(element => {
      /**
      * A set of collection run options for the paralle collection runs. For demonstrative purposes in this script, an
      * identical set of options has been used. However, different options can be used, so as to actually run different
@@ -32,11 +35,11 @@ foders.forEach(element => {
      */
      const options = {
         collection: path.join(__dirname, collectionJson ),
-        folder: element ,
+        folder: foders ,
         globalVar: globalVariable,
         envVar: envVariable,
-        iterationData: inputData
-    };
+        iterationData: element
+     };
      /**
      * A collection runner function that runs a collection for a pre-determined options object.
      *
@@ -49,8 +52,8 @@ foders.forEach(element => {
     };
     parallelCollectionRuns.push(parallelCollectionRun)  ;
 });
-   
-    
+console.log("inputData ok."); 
+console.log("async.parallel startup."); 
 // Runs the Postman sample collection thrice, in parallel.
 async.parallel(parallelCollectionRuns,
 
@@ -66,8 +69,11 @@ function (err, results) {
     results.forEach(function (result) {
         console.log("=====================================================================================================================================================");
         var failures = result.run.failures;
-        
-        console.log("");
+        if (failures) {
+            console.error(failures);
+        }else{  
+            console.log("normal..........");
+        }
         console.info(failures.length ? JSON.stringify(failures.failures, null, 2) :
             `${result.collection.name} ran successfully.`);
 
